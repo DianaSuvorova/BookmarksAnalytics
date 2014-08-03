@@ -2,9 +2,6 @@
 <html>
 <meta charset="utf-8">
 
-<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
-<!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
-
 <style>
 body {
   font: 11px sans-serif;
@@ -6057,17 +6054,6 @@ var rawData = d3.select("#csvdata").text(),
     csvdata = d3.csv.parse(rawData),
     data = [];
 
-// csvdata.forEach(function(d){
-//   accounts.push(d.account);
-//   var periodsActive= d.periodsActive
-//   monthInd.forEach(function(mi){
-//     data.push({"account": d.account,
-//               "period": parseInt(mi) || 0,
-//               "numLinks": parseInt(d[mi]) || 0,
-//               "periodsActive":periodsActive })
-//   })
-// })
-
 csvdata.forEach(function(d){
     data.push({"account": d.account,
               "period": parseInt(d.rowind) || 0,
@@ -6154,7 +6140,7 @@ var svg = d3.select("body").append("svg")
             tooltip.transition()
                  .duration(200)
                  .style("opacity", .9)
-            tooltip.html("NumLinks " + rValue(d) + "</br>NumTags " + d.numTags )
+            tooltip.html("NumLinks " + d.numLinks + "</br>NumTags " + d.numTags )
                  .style("left", (d3.event.pageX + 5) + "px")
                  .style("top", (d3.event.pageY - 28) + "px");
         })
