@@ -21,7 +21,7 @@ body {
 .tooltip {
   position: absolute;
   width: 80px;
-  height: 38px;
+  height: 50px;
   pointer-events: none;
   background: white
 }
@@ -6331,7 +6331,7 @@ var svg = d3.select("body").append("svg")
             tooltip.transition()
                  .duration(200)
                  .style("opacity", .9)
-            tooltip.html("NumLinks " + d.numLinks + "</br>NumTags " + d.numTags+ "</br>DaysActive " + d.daysActive )
+            tooltip.html("NumLinks " + d.numLinks + "</br>NumTags " + d.numTags+ "</br>DaysActive " + d.daysActive+ "</br>TotalLinks " + d.totalLinks )
                  .style("left", (d3.event.pageX + 5) + "px")
                  .style("top", (d3.event.pageY - 28) + "px");
         })
