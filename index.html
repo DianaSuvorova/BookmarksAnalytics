@@ -44,7 +44,7 @@ span.title {
   font-weight: bold;
 }
 
-.sortby:hover ,.show:hover, .arrange:hover {
+.sortby:hover ,.show:hover, .arrange:hover,.allign:hover {
   cursor: pointer;
 }
 
@@ -60,6 +60,10 @@ span.title {
 <br><br>
   <span class='title arrange'>Arrange By </span>
   <span id='arrange' class = 'arrange'> Relative time </span>
+<br><br>
+  <span class='title allign'>Align By </span>
+  <span id='allign' class = 'allign'> nothing </span>
+
 </div>  
 
 <pre id="csvheaders">
@@ -6155,6 +6159,7 @@ $(document).ready(function (){
   var isSortByPeriodsActive = false,
       isDisplayedTags =false,
       isAbsoluteTime =false;
+      isAllignedByMaxNumOfLinks =false,
 
 function returnInt(element){
   return parseInt(element,10);
@@ -6176,9 +6181,30 @@ $('.show').click( function () {
 
 
 $('.arrange').click( function () {
+
   isAbsoluteTime = !isAbsoluteTime;
-  isAbsoluteTime ? $('#arrange').text("Relative time") : $('#arrange').text("Absolute time")
+
+  if (isAbsoluteTime){
+    isAllignedByMaxNumOfLinks = false;
+    isAbsoluteTime ? $('#arrange').text("Absolute time") : $('#arrange').text("Relative time")
+  }
+
+  isAllignedByMaxNumOfLinks ? $('#allign').text("Max Num of links") : $('#allign').text("nothing")
   changeArrange();
+
+})
+
+
+$('.allign').click( function () {
+
+  isAllignedByMaxNumOfLinks = !isAllignedByMaxNumOfLinks;
+
+  if (isAllignedByMaxNumOfLinks){
+    isAbsoluteTime = false;
+    isAbsoluteTime ? $('#arrange').text("Absolute time") : $('#arrange').text("Relative time")
+  }
+  isAllignedByMaxNumOfLinks ? $('#allign').text("Max Num of links") : $('#allign').text("nothing")
+  changeAllign();
 
 })
 
@@ -6210,6 +6236,10 @@ csvdata.forEach(function(d){
               "daysActive": d.daysActive})
   })
 
+csvheader.forEach(function(d){
+  var maxInd = _.indexOf(_.pluck(_.groupBy(data,function(d){ return d.account; })[d.account],'numLinks'),_.max(_.pluck(_.groupBy(data,function(d){ return d.account; })[d.account],'numLinks')))
+  _.each(_.where(data,{account: d.account}), function(d,i){ return d.indByMaxNumOfLinks = i-maxInd})
+})
 
 var margin = {top: 20, right: 20, bottom: 30, left: 120},
     width = 1200 - margin.left - margin.right,
@@ -6363,6 +6393,24 @@ var svg = d3.select("body").append("svg")
     transition.select(".x.axis").call(xAxis).selectAll("g")
 
   }
+
+   function changeAllign() {
+
+    if(isAllignedByMaxNumOfLinks) {
+      xValue = function (d) { return d.indByMaxNumOfLinks;},
+      xScale.domain([d3.min(data.map(function(d) { return d.indByMaxNumOfLinks;})),d3.max(data.map(function(d) { return d.indByMaxNumOfLinks }))]);
+    }
+    else {
+      xValue = function (d) { return d.time_created;},
+      xScale.domain([d3.min(data.map(function(d) { return d.time_created;})),d3.max(data.map(function(d) { return d.time_created;}))]);
+    }
+
+
+    var transition = svg.transition().duration(750);
+    transition.selectAll(".dot").attr("cx", function(d) { return xMap(d); });
+    transition.select(".x.axis").call(xAxis).selectAll("g")
+
+   }
 
 });
 </script>
